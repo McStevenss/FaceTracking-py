@@ -42,7 +42,7 @@ class FaceDetector:
 
         return rval
     
-    def start(self):
+    def start(self, overlay_on_webcam=False):
 
         if not self.isReady:
             print("Camera not ready...")
@@ -61,8 +61,10 @@ class FaceDetector:
                 landmarker.detect_async(mp_image, frame_timestamp_ms)
                 blank = np.zeros_like(frame)
                 
-                # annotated = self.draw_landmarks_on_image(frame, self.latest_result)
-                annotated = self.draw_landmarks_on_image(blank, self.latest_result)
+                if overlay_on_webcam:
+                    annotated = self.draw_landmarks_on_image(frame, self.latest_result)
+                else:
+                    annotated = self.draw_landmarks_on_image(blank, self.latest_result)
                 
 
                 cv2.imshow("preview", annotated)
@@ -114,33 +116,6 @@ class FaceDetector:
                 .get_default_face_mesh_iris_connections_style())
 
         return annotated_image
-
-        
-
-# def capture_webcam():
-#     cv2.namedWindow("preview")
-#     videoCapture = cv2.VideoCapture(0)
-
-#     if videoCapture.isOpened():
-#         rval, frame = videoCapture.read()
-#     else:
-#         rval = False
-
-#     while rval:
-#         cv2.imshow("preview", frame)
-#         rval, frame = videoCapture.read()
-        
-#         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-
-
-
-#         key = cv2.waitKey(20)
-#         if key == 27:
-#             rval = False
-
-#     cv2.destroyWindow("preview")
-#     videoCapture.release()
-
 
 if __name__ == "__main__":
 
